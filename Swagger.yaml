@@ -1,0 +1,51 @@
+openapi: 3.0.1
+
+info:
+  title: KoGPT2
+  version: 1.0.0
+  contact:
+    name: Changyeop
+  description: |
+    Generate Korean using KoGPT2 model
+    ---
+          How to use:
+
+          * Fill the base text and length.
+          * If length is so big, generate time will be long.
+    ---
+
+servers:
+  - url: https://main-ko-gpt2-scy6500.endpoint.ainize.ai
+
+paths:
+  /generate:
+    post:
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: "The base of korean"
+                length:
+                  type: string
+                  description: "The length of text"
+              required:
+                - text
+                - length
+      responses: # Set response
+        '200':
+          description: "Successful Response"
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: "Bad Request Error"
+        '429':
+          description: "Too many requests"
+        '500':
+          description: "Server-side Error"
