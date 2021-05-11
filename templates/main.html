@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>KoGPT2</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<script type="text/javascript">
+    let time_obj = undefined;
+    let flag = undefined;
+    let chars = undefined;
+
+    window.onload = () => {
+        time_obj = document.getElementById("timer");
+        flag = false;       // 더블 클릭 체크
+    }
+
+
+    function double_submit_check() {
+        if (flag) {
+            console.log("double");
+            return true;
+        }
+        else {
+            flag = true;
+
+            return false;
+        }
+    }
+
+
+    function send_req() {
+        if (double_submit_check()){
+            return ;
+        }
+
+        let text = document.getElementById("text").value;
+
+        if (text == '') {
+            document.getElementById('warning').innerText = 'Please fill text!';
+            flag = false;
+            return ;
+        }
+
+        const formData = new FormData();
+        const url = "/generate";
+        let start = 0;
+
+        formData.append('text', text);
+        formData.append('length', 128);
+
+        // timer
+        timer = setInterval(() => {
+            start += 1;
+            time_obj.innerText = `${start / 10} 's`;
+        }, 100);
+
+
+        fetch (url, { method: 'POST', body: formData, })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                clearInterval(timer);
+                flag = false;
+            }
+        }).catch(err => {
+            clearInterval(timer);
+            flag = false;
+            document.getElementById('warning').innerText = err;
+        }).then(data => {
+            const result = document.getElementById('result');
+            result.innerHTML = '&nbsp;&nbsp;' + data[0];
+            clearInterval(timer);
+            time_obj.innerText = 'Done!';
+            flag = false;
+        }).catch(err => {
+            clearInterval(timer);
+            flag = false;
+            document.getElementById('warning').innerText = err;
+        });
+
+    }
+
+</script>
+<body>
+    <div class="styles">
+        <style>
+                #button{
+                    border-top-left-radius: 5pt;
+                    border-top-right-radius: 5pt;
+                    border-bottom-left-radius: 5pt;
+                    border-bottom-right-radius: 5pt;
+                }
+
+                #length{
+                    width: 70px;
+                    height: 30px;
+                    border-top-left-radius: 5pt;
+                    border-top-right-radius: 5pt;
+                    border-bottom-left-radius: 5pt;
+                    border-bottom-right-radius: 5pt;
+                }
+
+                table {
+                  border-spacing: 10px;
+                  border-collapse: separate;
+                }
+
+        </style>
+    </div>
+    <div class="container">
+        <div class="jumbotron mt-3">
+            <div class="intro">
+                <br>
+                <!-- Project title -->
+                <h1>KoGPT2</h1><br>
+                <a>Generate Korean using KoGPT2 model.</a><br><br>
+                <a>Github : </a> <a href="https://github.com/SKT-AI/KoGPT2" target="_blank">SKT-AI KoGPT2</a><br>
+                <a>Open API : </a> <a href="https://ainize.ai/scy6500/KoGPT2?branch=master" target="_blank">On Ainize</a><br>
+                <a>License : </a> <a href="https://github.com/SKT-AI/KoGPT2/blob/master/LICENSE" target="_blank">CC-BY-NC-SA 4.0</a><br>
+            </div>
+
+            <hr width="90%">
+
+            <div class="Notice">
+                <h3>Notice</h3>
+                <ul>
+                    <li>In this demo, the text length is fixed at 128.</li>
+                    <li>The last line can be cut off in the middle.</li>
+                </ul>
+            </div>
+
+            <br><hr width="90%">
+
+            <div class="sample">
+                <h3><label>Example</label></h3>
+                <h5><label>Input</label></h5>
+                <label>&nbsp;&nbsp;비트코인은 오를까요?</label><br><br>
+                <h5><label>Result</label></h5>
+                <label>&nbsp;&nbsp;비트코인은 오를까요?" "좋다, 좋아. 나는 지금 비트코인을 가지고 있지. 당신이 비트코인이면 돈의 일부라도 내줄 수 있다.
+                    당신은 지금 비트코인에 투자하면 안되지, 그렇지. 나는 꼼짝없이 비트코인을 잃어버릴 거니까." "그렇기 때문에 내가 비트코인은 갖고 싶지 않다고 할 거다."
+                    "그렇다면, 그게 바로 내가 비트코인을 어떻게 생각하고 있는지를 말해 주는 바로 그 순간이야. 당신은 지금 비트코인에게 투자하라고 말하고 있지 않나.
+                    나는 지금 이 순간에도 비트코인으로 돈을 벌지 말고 비트코인과 거래를 해보라고 말하고 있지.</label><br><br>
+            </div>
+
+            <br><hr width="90%">
+
+            <div class="generate">
+                <h3>Try it!</h3><br>
+                <label>Base text: </label>
+                <input type="text" id="text" style="width:40%">
+                <button class="btn btn-primary btn=lg" type="submit" id="button1" onclick="send_req();">Summit</button><br>
+                <label>Timer:&nbsp;</label><label id="timer">0.0</label><br>
+                <b><label id="warning" style="color:red;"></label></b>
+            </div>
+
+            <br><hr width="90%">
+
+            <div class="result">
+                <h3><label>Result</label></h3>
+                <!-- Story generate result table -->
+                <label id="result"></label>
+            </div>
+
+            <br><hr width="50%">
+        </div>
+    </div>
+</body>
+</html>
