@@ -37,7 +37,7 @@ def handle_requests_by_batch():
 
             for requests in request_batch:
                 try:
-                    requests["output"] = make_story(requests['input'][0], requests['input'][1])
+                    requests["output"] = make_text(requests['input'][0], requests['input'][1])
 
                 except Exception as e:
                     requests["output"] = e
@@ -46,7 +46,7 @@ def handle_requests_by_batch():
 handler = Thread(target=handle_requests_by_batch).start()
 
 
-def make_story(text, length):
+def make_text(text, length):
     try:
         input_ids = tokenizer.encode(text, return_tensors='pt')
 
@@ -60,11 +60,12 @@ def make_story(text, length):
 
         gen_ids = model.generate(input_ids,
                                  max_length=128,
-                                 repetition_penalty=2.0,
+                                 do_sample=True,
                                  pad_token_id=tokenizer.pad_token_id,
                                  eos_token_id=tokenizer.eos_token_id,
                                  bos_token_id=tokenizer.bos_token_id,
-                                 use_cache=True)
+                                 top_p=0.95,
+                                 top_k=50)
 
         result = dict()
 
