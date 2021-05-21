@@ -75,7 +75,7 @@
             document.getElementById('warning').innerText = err;
         }).then(data => {
             const result = document.getElementById('result');
-            result.innerHTML = '&nbsp;&nbsp;' + data[0];
+            result.innerHTML = data[0];
             clearInterval(timer);
             time_obj.innerText = 'Done!';
             flag = false;
@@ -141,9 +141,9 @@
             <div class="sample">
                 <h3><label>Example</label></h3>
                 <h5><label>Input</label></h5>
-                <label>&nbsp;&nbsp;비트코인은 오를까요?</label><br><br>
+                <label>비트코인은 오를까요?</label><br><br>
                 <h5><label>Result</label></h5>
-                <label>&nbsp;&nbsp;비트코인은 오를까요?" "좋다, 좋아. 나는 지금 비트코인을 가지고 있지. 당신이 비트코인이면 돈의 일부라도 내줄 수 있다.
+                <label>비트코인은 오를까요?" "좋다, 좋아. 나는 지금 비트코인을 가지고 있지. 당신이 비트코인이면 돈의 일부라도 내줄 수 있다.
                     당신은 지금 비트코인에 투자하면 안되지, 그렇지. 나는 꼼짝없이 비트코인을 잃어버릴 거니까." "그렇기 때문에 내가 비트코인은 갖고 싶지 않다고 할 거다."
                     "그렇다면, 그게 바로 내가 비트코인을 어떻게 생각하고 있는지를 말해 주는 바로 그 순간이야. 당신은 지금 비트코인에게 투자하라고 말하고 있지 않나.
                     나는 지금 이 순간에도 비트코인으로 돈을 벌지 말고 비트코인과 거래를 해보라고 말하고 있지.</label><br><br>
