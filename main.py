@@ -10,10 +10,10 @@ app = Flask(__name__)
 print("model loading...")
 
 # Model & Tokenizer loading
-tokenizer = PreTrainedTokenizerFast.from_pretrained('./KoGPT2',
+tokenizer = PreTrainedTokenizerFast.from_pretrained('./kogpt2-base-v2',
 bos_token='</s>', eos_token='</s>', unk_token='<unk>',
 pad_token='<pad>', mask_token='<mask>')
-model = GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
+model = GPT2LMHeadModel.from_pretrained('./kogpt2-base-v2')
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model.to(device)
@@ -71,19 +71,18 @@ def make_text(text, length):
 
         for idx, sample_output in enumerate(gen_ids):
             result[0] = tokenizer.decode(sample_output.tolist(), skip_special_tokens=True)
-        print(result)
         return result
 
     except Exception as e:
         print('Error occur in script generating!', e)
-        return jsonify({'error': e}), 500
+        return jsonify({'Error': e}), 500
 
 
 @app.route('/generate', methods=['POST'])
 def generate():
 
     if requests_queue.qsize() > BATCH_SIZE:
-        return jsonify({'Error': 'Too Many Requests'}), 429
+        return jsonify({'Error': 'Too Many Requests. Please try again later'}), 429
 
     try:
         args = []
@@ -94,7 +93,7 @@ def generate():
         args.append(length)
 
     except Exception as e:
-        return jsonify({'message': 'Invalid request'}), 500
+        return jsonify({'Error': 'Invalid request'}), 500
 
     req = {'input': args}
     requests_queue.put(req)
@@ -102,6 +101,8 @@ def generate():
     while 'output' not in req:
         time.sleep(CHECK_INTERVAL)
 
+    if text ==  "안녕":
+        return jsonify({'Error': 'Invalid request'}), 500
     return jsonify(req['output'])
 
 
