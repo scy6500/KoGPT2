@@ -71,6 +71,7 @@ def make_text(text, length):
 
         for idx, sample_output in enumerate(gen_ids):
             result[0] = tokenizer.decode(sample_output.tolist(), skip_special_tokens=True)
+        print(result)
         return result
 
     except Exception as e:
@@ -102,14 +103,6 @@ def generate():
         time.sleep(CHECK_INTERVAL)
 
     return jsonify(req['output'])
-
-
-@app.route('/queue_clear')
-def queue_clear():
-    while not requests_queue.empty():
-        requests_queue.get()
-
-    return "Clear", 200
 
 
 @app.route('/healthz', methods=["GET"])
