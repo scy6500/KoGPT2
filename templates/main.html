@@ -35,6 +35,8 @@
 
 
     function send_req() {
+        document.getElementById('warning').innerText = '';
+        document.getElementById('result').innerHTML = '';
         if (double_submit_check()){
             return ;
         }
@@ -60,31 +62,27 @@
             time_obj.innerText = `${start / 10} 's`;
         }, 100);
 
-
-        fetch (url, { method: 'POST', body: formData, })
-        .then(response => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
+        async function getResponse() {
+            try {
+                const response = await fetch(url, { method: 'POST', body: formData, });
+                const result = await response.json();
+                console.log(result);
+                if (response.status === 200) {
+                    document.getElementById('result').innerHTML = result[0];
+                    time_obj.innerText = 'Done!';
+                } else {
+                    document.getElementById('warning').innerText = result["Error"];
+                }
+            }
+            catch (err){
+                document.getElementById('warning').innerText = err;
+            }
+            finally {
                 clearInterval(timer);
                 flag = false;
             }
-        }).catch(err => {
-            clearInterval(timer);
-            flag = false;
-            document.getElementById('warning').innerText = err;
-        }).then(data => {
-            const result = document.getElementById('result');
-            result.innerHTML = data[0];
-            clearInterval(timer);
-            time_obj.innerText = 'Done!';
-            flag = false;
-        }).catch(err => {
-            clearInterval(timer);
-            flag = false;
-            document.getElementById('warning').innerText = err;
-        });
-
+        }
+        getResponse()
     }
 
 </script>
