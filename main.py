@@ -10,10 +10,10 @@ app = Flask(__name__)
 print("model loading...")
 
 # Model & Tokenizer loading
-tokenizer = PreTrainedTokenizerFast.from_pretrained('./kogpt2-base-v2',
+tokenizer = PreTrainedTokenizerFast.from_pretrained('./KoGPT2',
 bos_token='</s>', eos_token='</s>', unk_token='<unk>',
 pad_token='<pad>', mask_token='<mask>')
-model = GPT2LMHeadModel.from_pretrained('./kogpt2-base-v2')
+model = GPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2')
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model.to(device)
@@ -101,8 +101,6 @@ def generate():
     while 'output' not in req:
         time.sleep(CHECK_INTERVAL)
 
-    if text ==  "안녕":
-        return jsonify({'Error': 'Invalid request'}), 500
     return jsonify(req['output'])
 
 
