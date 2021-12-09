@@ -22,7 +22,7 @@ License : [CC-BY-NC-SA 4.0](https://github.com/SKT-AI/KoGPT2/blob/master/LICENSE
 ### Input example
 
 
-    curl -X POST "https://main-ko-gpt2-scy6500.endpoint.ainize.ai" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text= 비트코인은 오를까요?"
+    curl -X POST "https://main-ko-gpt2-scy6500.endpoint.ainize.ai/generate" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "text= 비트코인은 오를까요?"
     
 
 ### Output example
