@@ -101,7 +101,7 @@ def generate():
     while 'output' not in req:
         time.sleep(CHECK_INTERVAL)
 
-    return jsonify(req['output'])
+    return json.dumps(req['output'], ensure_ascii=False)
 
 
 @app.route('/healthz', methods=["GET"])
